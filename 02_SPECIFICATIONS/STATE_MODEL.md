@@ -1,53 +1,131 @@
+DOCUMENT ID: PROS-ENG-STATE-MODEL-V1.1
+DOCUMENT TYPE: ENGINE SPECIFICATION
+STATUS: ACTIVE
+AUTHORITY: PROSPERA ARCHITECTURE GROUP
+
 # Prospera Engine State Model
 
-## Purpose
+## 1. Overview
 
-This document defines the state machine used by the
-Prospera Engine runtime.
+The Prospera Engine operates as a deterministic event-driven
+state machine responsible for coordinating runtime behavior
+across the Prospera OS ecosystem.
 
-The state model ensures that system transitions follow
-a deterministic execution path.
+This document defines the canonical state model governing
+event processing and transition control within the engine
+runtime environment.
 
-## Core States
+The state model guarantees deterministic execution paths
+and ensures that all runtime transitions remain traceable
+and verifiable.
 
-The engine operates using the following fundamental states.
+## 2. Terminology
+
+State
+A defined operational condition of the engine runtime.
+
+Event
+A structured message representing an action that may trigger
+a state transition.
+
+Transition
+A valid change from one state to another state.
+
+Validator
+A component responsible for verifying transition legality.
+
+Ledger
+A subsystem responsible for recording runtime transitions.
+
+## 3. System Model
+
+The Prospera Engine is modeled as a finite state machine (FSM).
+
+Let S represent the set of engine states.
+
+S = {INITIALIZED, IDLE, PROCESSING, COMMITTED, FAILED}
+
+Let E represent the set of valid events.
+
+A transition function is defined as:
+
+T : S × E → S
+
+The transition function determines the next state of the engine
+given the current state and the incoming event.
+
+## 4. Core Runtime States
 
 INITIALIZED
-Engine has started but no event processing has begun.
+The engine has started but is not yet processing events.
 
 IDLE
-Engine is waiting for incoming events.
+The engine is operational and waiting for incoming events.
 
 PROCESSING
-Engine is evaluating and executing a state transition.
+The engine is evaluating a state transition triggered by an event.
 
 COMMITTED
-A valid state transition has been completed.
+A transition has successfully completed.
 
 FAILED
-Transition validation failed and the event was rejected.
+A transition has been rejected due to rule violation or validation failure.
 
-## State Transition Flow
+## 5. State Transition Graph
 
-INITIALIZED
-↓
-IDLE
-↓
-PROCESSING
-↓
-COMMITTED or FAILED
+INITIALIZED → IDLE
 
-After completion the engine returns to IDLE.
+IDLE → PROCESSING
 
-## Transition Rules
+PROCESSING → COMMITTED
 
-A transition may occur only if the event satisfies
-the validation rules defined by the system.
+PROCESSING → FAILED
 
-Invalid transitions must move to the FAILED state.
+COMMITTED → IDLE
 
-## System Integrity
+FAILED → IDLE
 
-The state model ensures that all engine operations
-are traceable and deterministic across the
-Prospera OS runtime.
+## 6. Transition Rules
+
+A transition is considered valid only if all of the following
+conditions are satisfied:
+
+1. The event structure complies with EVENT_SCHEMA.
+2. The transition is permitted within the state graph.
+3. The transition passes validation checks.
+
+Any violation must cause the transition to move to the FAILED state.
+
+## 7. Event Processing Flow
+
+The engine processes events using the following lifecycle:
+
+Receive Event
+Validate Event Structure
+Evaluate State Transition
+Execute Transition
+Record Transition to Ledger
+Return to Idle State
+
+## 8. Error Handling
+
+Transition failures may occur due to:
+
+Invalid event structure
+Unauthorized transition attempt
+Validator rejection
+
+All failures must generate an auditable record.
+
+## 9. Security Considerations
+
+Event authenticity must be verified through the API gateway.
+
+Replay attacks must be mitigated through monotonic event identifiers
+and timestamp validation.
+
+## 10. References
+
+Prospera Engine Event Schema
+Prospera Validator Specification
+Prospera Ledger Architecture
