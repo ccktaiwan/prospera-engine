@@ -1,45 +1,131 @@
+DOCUMENT ID: PROS-ENG-SYSTEM-CONTEXT-V1.1
+DOCUMENT TYPE: ARCHITECTURE SPECIFICATION
+STATUS: ACTIVE
+AUTHORITY: PROSPERA ARCHITECTURE GROUP
+
 # Prospera Engine System Context
 
-## Position in Prospera OS
+## 1. Overview
 
-Prospera Engine operates as the core execution runtime within
-the Prospera OS architecture.
+This document defines the system boundary and interaction
+environment of the Prospera Engine within the Prospera OS
+architecture.
 
-It is responsible for interpreting events and performing
-state transitions that drive system behavior.
+The system context describes how the engine interacts with
+external components and supporting subsystems.
 
-## Upstream Systems
+Understanding the system context ensures that responsibilities
+are clearly separated across the architecture.
 
-prospera-api-gateway
-Handles external API requests and forwards events to the engine.
+## 2. Terminology
 
-prospera-workflow-engine
-Generates workflow execution events consumed by the engine.
+Engine
+The runtime system responsible for processing events and
+executing state transitions.
 
-prospera-generation-layer
-Produces automation and orchestration instructions.
+External System
+Any system that interacts with the engine but operates
+outside the engine runtime.
 
-## Downstream Systems
+Event Source
+A component capable of generating engine events.
 
-prospera-ledger
-Records all state transitions and runtime activity.
+Gateway
+The system responsible for authenticating and routing requests.
 
-prospera-validator
-Verifies that transitions comply with system rules.
+## 3. System Boundary
 
-prospera-audit-log
-Stores traceable execution history.
+The Prospera Engine operates strictly within the runtime
+execution layer of the Prospera OS architecture.
 
-## Interaction Model
+The engine is responsible for:
 
-External systems send events to the engine runtime.
+Processing validated events
+Executing deterministic state transitions
+Coordinating runtime execution
 
-Gateway → Engine → State Transition
+The engine does not perform authentication, validation,
+or data persistence directly.
 
-Each transition produces a state change that is recorded
-and validated by downstream components.
+These responsibilities belong to external systems.
 
-## Architectural Importance
+## 4. External Systems
 
-Prospera Engine acts as the central execution hub that
-coordinates runtime behavior across the Prospera ecosystem.
+The Prospera Engine interacts with the following
+external components.
+
+API Gateway
+Responsible for receiving and authenticating requests.
+
+Validator
+Responsible for verifying whether state transitions
+are valid according to system rules.
+
+Ledger
+Responsible for recording system transitions and
+maintaining immutable runtime history.
+
+Workflow Engine
+Responsible for generating operational events that
+trigger engine transitions.
+
+Monitoring System
+Responsible for collecting runtime metrics and logs.
+
+## 5. Interaction Model
+
+The interaction flow between components follows
+a defined sequence.
+
+External system generates an event.
+
+API Gateway authenticates the request.
+
+Validator verifies event integrity and transition rules.
+
+The validated event is delivered to the engine.
+
+The engine evaluates and executes the state transition.
+
+Transition results are recorded in the ledger.
+
+Monitoring systems observe runtime activity.
+
+## 6. System Responsibilities
+
+The engine runtime is responsible for:
+
+Event processing
+State transition management
+Runtime orchestration
+Execution determinism
+
+All other responsibilities remain outside the engine boundary.
+
+## 7. Architectural Separation
+
+The Prospera architecture separates the following concerns.
+
+Access control
+Validation logic
+Execution runtime
+State persistence
+Monitoring and observability
+
+This separation ensures modular architecture
+and reduces system coupling.
+
+## 8. Security Considerations
+
+All incoming events must pass through the
+API gateway authentication layer.
+
+The engine must reject any event that has not
+been validated by the validator subsystem.
+
+## 9. References
+
+Prospera Engine System Overview
+Prospera Engine Runtime Model
+Prospera Engine Component Model
+Prospera Engine Event Schema
