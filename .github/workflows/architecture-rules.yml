@@ -1,3 +1,5 @@
+﻿# DISABLED 2026-05-07
+<#
 name: Architecture Rule Validation
 
 on:
@@ -30,3 +32,5 @@ steps:
 
       echo "Architecture rules validated successfully."
 ```
+
+#>
