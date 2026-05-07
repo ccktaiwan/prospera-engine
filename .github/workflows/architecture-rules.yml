@@ -1,36 +1,9 @@
-﻿# DISABLED 2026-05-07
-<#
-name: Architecture Rule Validation
-
+﻿# DISABLED 2026-05-07 - unified under prospera_guard.yml
+name: Architecture Rule Validation (Disabled)
 on:
-pull_request:
-branches:
-- main
-
+  workflow_dispatch:
 jobs:
-architecture-rules:
-runs-on: ubuntu-latest
-
-```
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-
-  - name: Check forbidden architecture violations
-    run: |
-      echo "Scanning runtime code for architecture violations..."
-
-      if grep -R "ledger.write_direct" .; then
-        echo "Direct ledger writes are forbidden. Use Ledger Interface."
-        exit 1
-      fi
-
-      if grep -R "validator.bypass" .; then
-        echo "Validator bypass detected. Architecture violation."
-        exit 1
-      fi
-
-      echo "Architecture rules validated successfully."
-```
-
-#>
+  disabled:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This workflow is disabled"
