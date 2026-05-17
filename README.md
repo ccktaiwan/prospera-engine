@@ -14,7 +14,7 @@ Maturity-Level: "Phase 5 (High-Concurrency Implementation)"
 ## ⚡ Runtime Entry Point
 
 The authoritative execution surface of this engine is defined in:
-→ SYSTEM_STATE_MACHINE.yaml
+→ 02_SPECIFICATIONS/STATE_MODEL.md
 
 DOCUMENT TITLE:
 Prospera OS Deterministic Engine & Agentic Arbiter Specification
